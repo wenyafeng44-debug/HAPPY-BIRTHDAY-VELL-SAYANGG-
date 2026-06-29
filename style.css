@@ -1,0 +1,109 @@
+/* Central stylesheet for index.html and birthday.html
+   Variables, layout, components, and utility classes
+   Created: 2026-06-29
+*/
+:root{
+  --accent:#ff3b84;
+  --accent-2:#ff0066;
+  --bg-1:#ff8eb8;
+  --bg-2:#ffd6e7;
+  --bg-3:#ffeef5;
+  --card-bg: rgba(255,255,255,.18);
+  --muted:#6b6b6b;
+  --glass-border: rgba(255,255,255,.35);
+  --shadow: 0 20px 50px rgba(255,0,128,.18);
+  --radius: 12px;
+  --transition: 180ms ease;
+}
+
+/* Core reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: Poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(135deg,var(--bg-1),var(--bg-2),var(--bg-3));
+  display:flex;align-items:center;justify-content:center;overflow:hidden;color:#111;
+}
+
+/* Accessibility helper */
+.sr-only{position:absolute !important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+
+/* Generic container used by index.html */
+.container{
+  width:min(90vw,380px);
+  background:var(--card-bg);
+  backdrop-filter: blur(18px);
+  border-radius:25px;
+  padding:32px;
+  text-align:center;
+  box-shadow:var(--shadow);
+  border:1px solid var(--glass-border);
+  position:relative;z-index:10;
+}
+
+.container h1{
+  font-family:"Great Vibes", cursive; color:#fff; font-size:48px; text-shadow:0 0 18px hotpink;margin-bottom:6px;
+}
+.container p{color:#fff;margin:12px 0 18px}
+
+input[type="password"]{
+  width:100%;padding:14px;border:none;border-radius:var(--radius);font-size:16px;text-align:center;margin-top:8px;outline:none;
+}
+
+button{
+  width:100%;padding:14px;margin-top:16px;border:none;border-radius:var(--radius);cursor:pointer;font-size:16px;font-weight:700;background:var(--accent);color:white;transition:transform var(--transition),background var(--transition);
+}
+button:hover{transform:translateY(-2px);background:var(--accent-2)}
+
+#error{margin-top:12px;color:#fff3b0;min-height:1.2em}
+
+/* Floating hearts layer for index */
+.hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.heart{position:absolute;transform:translateY(100vh);will-change:transform,opacity;animation-name:floatUp;animation-timing-function:linear;animation-iteration-count:infinite;color:#fff;font-size:18px;opacity:.8}
+@keyframes floatUp{0%{transform:translateY(100vh) scale(.9);opacity:0}10%{opacity:.85}100%{transform:translateY(-120px) scale(1);opacity:0}}
+
+/* Card layout for birthday.html */
+.card{
+  width:min(98vw,980px);max-width:980px;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(135deg,rgba(255,255,255,0.85),rgba(255,255,255,0.75));box-shadow:0 20px 60px rgba(255,90,150,0.12);display:flex;gap:24px;align-items:stretch;
+}
+.card .left{flex:1 1 520px;padding:36px 32px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative;z-index:3}
+.card h1{font-family:"Great Vibes",cursive;font-size:64px;margin:0;color:var(--accent);text-shadow:0 6px 18px rgba(255,59,132,0.18)}
+.card p.lead{font-size:18px;color:var(--muted);margin:10px 0 18px}
+.actions{display:flex;gap:12px;margin-top:18px;width:100%}
+
+.card button{appearance:none;border:none;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px;background:var(--accent);color:white;box-shadow:0 8px 18px rgba(255,59,132,0.18)}
+.card button.secondary{background:transparent;color:var(--accent);border:2px solid rgba(255,59,132,0.12)}
+
+.right{width:360px;background:linear-gradient(180deg,rgba(255,240,248,0.7),rgba(255,250,253,0.75));padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative}
+
+.cake{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 30% 20%,#ffe1f0,#ffd0e6);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -10px 30px rgba(0,0,0,0.04)}
+.cake .flame{width:12px;height:30px;background:linear-gradient(#fff58a,#ffb84d);border-radius:10px;box-shadow:0 6px 18px rgba(255,136,0,0.18)}
+
+.message{font-size:14px;color:#5a5a5a;text-align:center}
+.credits{font-size:12px;color:var(--muted);margin-top:18px}
+.backlink{position:absolute;left:14px;top:14px;font-size:13px;color:var(--accent);text-decoration:none}
+
+/* Confetti canvas */
+canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:4}
+
+/* Utilities */
+.text-center{text-align:center}
+.mt-12{margin-top:12px}
+.hidden{display:none}
+
+/* Responsive tweaks */
+@media (max-width:920px){
+  .card{flex-direction:column;align-items:center}
+  .right{width:100%;order:2}
+  .left{order:1;padding:22px}
+  .card h1{font-size:48px}
+}
+@media (max-width:420px){
+  .container h1{font-size:40px}
+  .card h1{font-size:40px}
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:0s !important;transition-duration:0s !important}
+}
