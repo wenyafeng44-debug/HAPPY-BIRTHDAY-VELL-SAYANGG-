@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Selamat Ulang Tahun, Vell! 🎉</title>
+  <meta name="theme-color" content="#ff9ccf">
+
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#ffeef5;
+      --bg2:#fff1f8;
+      --accent:#ff3b84;
+      --muted:#6b6b6b;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+
+    body{
+      font-family:Poppins,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;align-items:center;justify-content:center;padding:24px;
+    }
+
+    .card{
+      width:min(980px,100%);
+      max-width:980px;
+      border-radius:20px;
+      overflow:hidden;
+      position:relative;
+      background:linear-gradient(135deg,rgba(255,255,255,0.85),rgba(255,255,255,0.75));
+      box-shadow:0 20px 60px rgba(255,90,150,0.12);
+      display:flex;gap:24px;align-items:stretch;
+    }
+
+    .left{
+      flex:1 1 520px;padding:36px 32px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative;z-index:3;
+    }
+
+    h1{
+      font-family:"Great Vibes",cursive;font-size:64px;margin:0;color:var(--accent);text-shadow:0 6px 18px rgba(255,59,132,0.18);
+    }
+
+    p.lead{font-size:18px;color:var(--muted);margin:10px 0 18px}
+
+    .actions{display:flex;gap:12px;margin-top:18px;width:100%;}
+
+    button{
+      appearance:none;border:none;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;font-size:16px;
+      background:var(--accent);color:white;box-shadow:0 8px 18px rgba(255,59,132,0.18);
+    }
+
+    button.secondary{background:transparent;color:var(--accent);border:2px solid rgba(255,59,132,0.12)}
+
+    .right{
+      width:360px;background:linear-gradient(180deg,rgba(255,240,248,0.7),rgba(255,250,253,0.75));padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;
+    }
+
+    .cake{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 30% 20%,#ffe1f0,#ffd0e6);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -10px 30px rgba(0,0,0,0.04)}
+
+    .cake .flame{width:12px;height:30px;background:linear-gradient(#fff58a,#ffb84d);border-radius:10px;box-shadow:0 6px 18px rgba(255,136,0,0.18)}
+
+    .message{font-size:14px;color:#5a5a5a;text-align:center}
+
+    .credits{font-size:12px;color:var(--muted);margin-top:18px}
+
+    .backlink{position:absolute;left:14px;top:14px;font-size:13px;color:var(--accent);text-decoration:none}
+
+    /* confetti canvas overlay */
+    canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:4}
+
+    @media (max-width:920px){
+      .card{flex-direction:column;align-items:center}
+      .right{width:100%;order:2}
+      .left{order:1;padding:22px}
+      h1{font-size:48px}
+    }
+
+  </style>
+</head>
+<body>
+
+  <a class="backlink" href="index.html">← Kembali</a>
+
+  <div class="card" role="main">
+    <div class="left">
+      <h1>Selamat Ulang Tahun, Vell! 🎉</h1>
+      <p class="lead">Hari ini spesial karena kamu. Semoga semua harapanmu tercapai, bahagia selalu, dan hari ini dipenuhi tawa, cinta, dan kue manis.</p>
+
+      <p class="lead">Aku buat ini khusus untukmu. Klik "Rayakan" untuk musik, confetti, dan pelukan virtual. 💕</p>
+
+      <div class="actions">
+        <button id="celebrateBtn">🎊 Rayakan!</button>
+        <button id="playPauseBtn" class="secondary">▶ Putar Musik</button>
+      </div>
+
+      <div class="credits">Dibuat dengan cinta ❤️ — jika suaranya diblokir oleh browser, tekan tombol Putar.</div>
+    </div>
+
+    <div class="right" aria-hidden="false">
+      <div class="cake" aria-hidden="true">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div style="width:120px;height:90px;background:linear-gradient(#fff,#ffeef2);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.06);display:flex;align-items:flex-start;justify-content:center;padding-top:8px;position:relative;">
+            <div class="flame" style="transform:translateY(-6px);"></div>
+          </div>
+          <div style="font-weight:700;color:var(--accent);">Kue Ulang Tahun</div>
+        </div>
+      </div>
+      <div class="message">Semoga hari ini menjadi awal dari tahun yang penuh keberuntungan.</div>
+    </div>
+  </div>
+
+  <canvas class="confetti" id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <script>
+    // Simple confetti implementation
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = innerWidth;
+    let H = canvas.height = innerHeight;
+    window.addEventListener('resize', ()=>{W = canvas.width = innerWidth; H = canvas.height = innerHeight});
+
+    function rand(min,max){return Math.random()*(max-min)+min}
+
+    class Particle{
+      constructor(){
+        this.reset();
+      }
+      reset(){
+        this.x = rand(0,W);
+        this.y = rand(-H,0);
+        this.w = rand(6,14);
+        this.h = rand(6,12);
+        this.color = `hsl(${Math.floor(rand(0,360))},80%,60%)`;
+        this.vx = rand(-0.5,0.5);
+        this.vy = rand(1,4);
+        this.rot = rand(0,Math.PI*2);
+        this.vr = rand(-0.1,0.1);
+        this.alpha = 1;
+      }
+      update(){
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.02; // gravity
+        this.rot += this.vr;
+        if(this.y>H+20 || this.x<-50 || this.x>W+50) this.reset();
+      }
+      draw(){
+        ctx.save();
+        ctx.translate(this.x,this.y);
+        ctx.rotate(this.rot);
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);
+        ctx.restore();
+      }
+    }
+
+    let particles = [];
+    function makeConfetti(count=150){
+      particles = [];
+      for(let i=0;i<count;i++) particles.push(new Particle());
+    }
+
+    function animate(){
+      ctx.clearRect(0,0,W,H);
+      for(let p of particles){p.update();p.draw()}
+      requestAnimationFrame(animate);
+    }
+
+    // Simple melody using WebAudio API (short jingle)
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    function playJingle(){
+      if(!AudioCtx) return;
+      if(!audioCtx) audioCtx = new AudioCtx();
+      const now = audioCtx.currentTime;
+      const notes = [440, 523.25, 659.25, 523.25, 440]; // A4 C5 E5 C5 A4
+      const dur = 0.28;
+      notes.forEach((freq,i)=>{
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.value = 0.0001;
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(now + i*dur*0.9);
+        g.gain.linearRampToValueAtTime(0.12, now + i*dur*0.9 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + (i+1)*dur*0.9);
+        o.stop(now + (i+1)*dur*0.9);
+      });
+    }
+
+    // Play/pause control (we synthesize sounds on demand, so toggle acts as mute/unmute)
+    let enabledSound = false;
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    playPauseBtn.addEventListener('click', ()=>{
+      enabledSound = !enabledSound;
+      playPauseBtn.textContent = enabledSound ? '⏸ Musik Aktif' : '▶ Putar Musik';
+      if(enabledSound) { // play a short loop of melody
+        playJingle();
+      }
+    });
+
+    // Celebrate button triggers confetti + sound
+    const celebrateBtn = document.getElementById('celebrateBtn');
+    celebrateBtn.addEventListener('click', ()=>{
+      makeConfetti(220);
+      if(!particles.length) makeConfetti(220);
+      if(!animationStarted){animate();animationStarted=true}
+      if(enabledSound){playJingle()}
+      // temporary burst: increase vy for a short time
+      setTimeout(()=>{makeConfetti(120)},4000);
+    });
+
+    // auto-trigger small celebration after load
+    let animationStarted=false;
+    window.addEventListener('load', ()=>{
+      // slight delay then small burst
+      setTimeout(()=>{
+        makeConfetti(120);
+        if(!animationStarted){animate();animationStarted=true}
+        // try to play if user previously interacted (browsers block autoplay audio)
+        try{ if(enabledSound){playJingle()} }catch(e){}
+      },900);
+    });
+
+    // Accessibility: allow keyboard activation
+    celebrateBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter' || e.key===' ') celebrateBtn.click() });
+
+  </script>
+</body>
+</html>
