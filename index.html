@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ff8eb8">
+  <title>Happy Birthday Sayanggkuu ❤️</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html,body { height: 100%; }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Poppins, sans-serif;
+      background: linear-gradient(135deg,#ff8eb8,#ffd6e7,#ffeef5);
+      overflow: hidden;
+    }
+
+    .container {
+      width: min(90vw, 380px);
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(18px);
+      border-radius: 25px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(255,0,128,.18);
+      border: 1px solid rgba(255,255,255,.35);
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      font-family: "Great Vibes", cursive;
+      color: #fff;
+      font-size: 48px;
+      text-shadow: 0 0 18px hotpink;
+    }
+
+    p { color: #fff; margin: 12px 0 18px; }
+
+    .sr-only {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 8px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      background: #ff3b84;
+      color: white;
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    button:hover { transform: translateY(-2px); background: #ff0066; }
+
+    #error {
+      margin-top: 12px;
+      color: #fff3b0;
+      min-height: 1.2em;
+    }
+
+    /* Floating hearts layer (visual only) */
+    .hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      transform: translateY(100vh);
+      will-change: transform, opacity;
+      animation-name: floatUp;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) scale(0.9); opacity: 0; }
+      10%  { opacity: 0.85; }
+      100% { transform: translateY(-120px) scale(1); opacity: 0; }
+    }
+
+    @media (max-width: 360px) {
+      h1 { font-size: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" role="main">
+    <h1>Happy Birthday ❤️</h1>
+    <p>Website spesial hanya untuk seseorang yang paling aku sayang.</p>
+
+    <form id="loginForm" autocomplete="off" novalidate>
+      <label for="password" class="sr-only">Masukkan Password</label>
+      <input id="password" name="password" type="password" placeholder="Masukkan Password" inputmode="numeric" aria-describedby="error" />
+      <button type="submit">Masuk Website</button>
+      <div id="error" role="alert" aria-live="assertive"></div>
+    </form>
+  </div>
+
+  <!-- visual hearts (ARIA-hidden) -->
+  <div class="hearts" aria-hidden="true"></div>
+
+  <script>
+    // NOTE: Client-only password checks are not secure. This is okay for a private surprise but do not use for anything sensitive.
+    // If you want stronger protection, validate the password on a server.
+
+    // (Optional) Plain-check password (for small private use). Replace with server-side check for real security.
+    const PLAIN_PASSWORD = "14626";
+
+    const form = document.getElementById('loginForm');
+    const input = document.getElementById('password');
+    const error = document.getElementById('error');
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      const val = input.value || "";
+      // simple comparison — still visible in client code
+      if (val === PLAIN_PASSWORD) {
+        // proceed
+        window.location.href = "birthday.html";
+      } else {
+        error.textContent = "Password Salah ❤️";
+        input.focus();
+      }
+    });
+
+    // Create floating hearts with limited DOM nodes to reduce cost
+    const heartsContainer = document.querySelector('.hearts');
+    const HEART_COUNT = 22;
+    for (let i = 0; i < HEART_COUNT; i++) {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.textContent = '❤';
+      h.style.left = (Math.random() * 100) + 'vw';
+      const dur = 5 + Math.random() * 8;
+      const delay = -(Math.random() * dur);
+      h.style.animationDuration = dur + 's';
+      h.style.animationDelay = delay + 's';
+      h.style.fontSize = (12 + Math.random() * 36) + 'px';
+      h.style.opacity = (0.4 + Math.random() * 0.8).toString();
+      heartsContainer.appendChild(h);
+    }
+  </script>
+</body>
+</html>
